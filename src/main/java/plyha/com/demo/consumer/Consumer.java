@@ -30,7 +30,7 @@ public class Consumer {
         try(FileWriter fw = new FileWriter(dir+ File.separator + fileName,false)) {
             String text = record.value().toString();
             fw.write(text);
-            System.out.printf("The file %s was saved in root directory", fileName);
+            System.out.printf("The file %s was saved in root directory\n", fileName);
         }catch (IOException e){
             e.printStackTrace();
         }
@@ -42,7 +42,7 @@ public class Consumer {
             try {
                 Files.createDirectories(dir);
             }catch (IOException e){
-                System.out.printf("Can't create the directory %s",dir);
+                System.out.printf("Can't create the directory %s\n",dir);
             }
         }
     }
