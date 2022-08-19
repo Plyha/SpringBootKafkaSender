@@ -1,7 +1,9 @@
 package plyha.com.demo.consumer;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -14,14 +16,20 @@ import java.nio.file.Paths;
 @Service
 public class Consumer {
 
+    @Autowired
+    private KafkaTemplate<String, String> kafkaTemplate;
+
+    private final String kafkaTopicAnswer = "String_Kafka_Answer";
+
     private final Path dir = Paths.get(".\\SavedMessagesFolder");
 
     @KafkaListener(topics = {"String_Kafka"})
     public void listen(ConsumerRecord<?, ?> record) {
-
-        System.out.printf("topic = %s, offest = %d, value = %s\n",record.topic(),record.offset(),record.value());
+        String answer = String.format("topic = %s, offest = %d, value = %s\n",record.topic(),record.offset(),record.value());
+        System.out.printf(answer);
         createDir();
         saveMessage(record);
+        kafkaTemplate.send(kafkaTopicAnswer,answer);
 
     }
     private void saveMessage(ConsumerRecord<?, ?> record){
